@@ -33,20 +33,26 @@ var logger = &Logger{
 }
 
 // fields 从上下文中提取配置的字段
-func (l *Logger) fields(ctx context.Context) []zap.Field {
+func (l *Logger) fields(ctx context.Context, fields ...zap.Field) []zap.Field {
 	if len(l.ctxFields) == 0 {
-		return nil
+		return fields
 	}
-	fields := make([]zap.Field, 0, len(l.ctxFields))
+
+	result := make([]zap.Field, 0, len(l.ctxFields)+len(fields))
 	for _, field := range l.ctxFields {
 		val := ctx.Value(field)
 		if val != nil {
 			if strVal, ok := val.(string); ok {
-				fields = append(fields, zap.String(field, strVal))
+				result = append(result, zap.String(field, strVal))
 			}
 		}
 	}
-	return fields
+
+	if len(fields) > 0 {
+		result = append(result, fields...)
+	}
+
+	return result
 }
 
 // InitLog 初始化日志对象

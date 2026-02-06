@@ -11,7 +11,7 @@ import (
 // msg: 日志消息
 // fields: 额外字段
 func Debug(ctx context.Context, msg string, fields ...zap.Field) {
-	logger.Debug(msg, append(logger.fields(ctx), fields...)...)
+	logger.Debug(msg, logger.fields(ctx, fields...)...)
 }
 
 // Debugw 记录Debug级别日志（键值对形式）
@@ -27,7 +27,7 @@ func Debugw(ctx context.Context, msg string, args ...interface{}) {
 // msg: 日志消息
 // fields: 额外字段
 func Info(ctx context.Context, msg string, fields ...zap.Field) {
-	logger.Info(msg, append(logger.fields(ctx), fields...)...)
+	logger.Info(msg, logger.fields(ctx, fields...)...)
 }
 
 // Infow 记录Info级别日志（键值对形式）
@@ -43,7 +43,7 @@ func Infow(ctx context.Context, msg string, args ...interface{}) {
 // msg: 日志消息
 // fields: 额外字段
 func Warn(ctx context.Context, msg string, fields ...zap.Field) {
-	logger.Warn(msg, append(logger.fields(ctx), fields...)...)
+	logger.Warn(msg, logger.fields(ctx, fields...)...)
 }
 
 // Warnw 记录Warn级别日志（键值对形式）
@@ -59,7 +59,7 @@ func Warnw(ctx context.Context, msg string, args ...interface{}) {
 // msg: 日志消息
 // fields: 额外字段
 func Error(ctx context.Context, msg string, fields ...zap.Field) {
-	logger.Error(msg, append(logger.fields(ctx), fields...)...)
+	logger.Error(msg, logger.fields(ctx, fields...)...)
 }
 
 // Errorw 记录Error级别日志（键值对形式）
@@ -75,7 +75,7 @@ func Errorw(ctx context.Context, msg string, args ...interface{}) {
 // msg: 日志消息
 // fields: 额外字段
 func Fatal(ctx context.Context, msg string, fields ...zap.Field) {
-	logger.Fatal(msg, append(logger.fields(ctx), fields...)...)
+	logger.Fatal(msg, logger.fields(ctx, fields...)...)
 }
 
 // Panic 记录Panic级别日志并触发panic
@@ -83,7 +83,7 @@ func Fatal(ctx context.Context, msg string, fields ...zap.Field) {
 // msg: 日志消息
 // fields: 额外字段
 func Panic(ctx context.Context, msg string, fields ...zap.Field) {
-	logger.Panic(msg, append(logger.fields(ctx), fields...)...)
+	logger.Panic(msg, logger.fields(ctx, fields...)...)
 }
 
 // With 添加固定字段到日志对象
@@ -127,8 +127,8 @@ func Infof(ctx context.Context, template string, args ...interface{}) {
 // template: 格式化模板
 // args: 格式化参数
 func WithInfof(ctx context.Context, field zap.Field, template string, args ...interface{}) {
-	allFields := append(logger.fields(ctx), field)
-	logger.With(allFields...).Sugar().Infof(template, args...)
+	// 直接将 field 传递给 fields 方法，它会处理合并
+	logger.With(logger.fields(ctx, field)...).Sugar().Infof(template, args...)
 }
 
 // Warnf 记录Warn级别日志（格式化字符串）
