@@ -1,3 +1,8 @@
+[![Build status](https://img.shields.io/appveyor/build/lifezq/log.svg)](https://ci.appveyor.com/project/lifezq/log)
+[![Coverage Status](https://img.shields.io/coveralls/lifezq/log.svg?style=flat-square)](https://coveralls.io/github/lifezq/log?branch=master)
+[![License](http://img.shields.io/badge/license-apache-blue.svg?style=flat-square)](https://raw.githubusercontent.com/lifezq/log/master/LICENSE)
+[![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/lifezq/log)
+
 # log
 
 一个功能丰富、易于使用的Go语言日志库，基于zap封装，提供了上下文日志、文件轮转、多级别日志、以及与GORM和Elasticsearch的集成支持。
