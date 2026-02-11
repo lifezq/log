@@ -1,3 +1,7 @@
+// Copyright 2026 The Goutils Author. All Rights Reserved.
+//
+// -------------------------------------------------------------------
+
 package log
 
 import (

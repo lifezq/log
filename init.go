@@ -1,3 +1,7 @@
+// Copyright 2026 The Goutils Author. All Rights Reserved.
+//
+// -------------------------------------------------------------------
+
 package log
 
 import (
@@ -18,6 +22,7 @@ type Options struct {
 	CallerEnable bool          // 是否开启调用栈信息
 	LogLevel     zapcore.Level // 日志级别
 	CloseConsole bool          // 是否关闭控制台输出
+	Fields       []zap.Field   // 全局固定字段
 }
 
 // Logger 封装 zap.Logger 和上下文配置
@@ -55,10 +60,9 @@ func (l *Logger) fields(ctx context.Context, fields ...zap.Field) []zap.Field {
 	return result
 }
 
-// InitLog 初始化日志对象
+// Init 初始化日志对象
 // opt: 日志配置选项
-// fields: 全局固定字段
-func InitLog(opt Options, fields ...zap.Field) {
+func Init(opt Options) {
 	var zLogger *zap.Logger
 
 	// 配置日志编码器
@@ -99,8 +103,8 @@ func InitLog(opt Options, fields ...zap.Field) {
 	}
 
 	// 添加全局固定字段
-	if len(fields) > 0 {
-		zLogger = zLogger.With(fields...)
+	if len(opt.Fields) > 0 {
+		zLogger = zLogger.With(opt.Fields...)
 	}
 
 	// 更新全局实例

@@ -36,13 +36,16 @@ import (
 
 func main() {
     // 初始化日志
-    log.InitLog(log.Options{
+    log.Init(log.Options{
         Filename:     "app",           // 日志文件名称
         MaxCount:     7,               // 最大保存7个日志文件
         CallerEnable: true,            // 开启调用栈信息
         LogLevel:     zapcore.InfoLevel, // 日志级别
         CloseConsole: false,           // 不关闭控制台输出
-    }, zap.String("service", "example")) // 全局固定字段
+        Fields: []zap.Field{           // 全局固定字段
+            zap.String("service", "example"),
+        },
+    })
 
     // 创建上下文
     ctx := context.Background()
@@ -67,6 +70,7 @@ func main() {
 | LogLevel | zapcore.Level | 日志级别 | zapcore.InfoLevel |
 | CloseConsole | bool | 是否关闭控制台输出 | false |
 | CtxFields | []string | 上下文中需要传递的字段键名列表 | [] |
+| Fields | []zap.Field | 全局固定字段 | [] |
 
 ## 日志级别
 
@@ -105,10 +109,13 @@ ctx = context.WithValue(ctx, "request_id", "123456")
 ctx = context.WithValue(ctx, "user_id", 789)
 
 // 初始化时配置要从上下文中提取的字段
-log.InitLog(log.Options{
-    // ... 其他配置
-    CtxFields: []string{"request_id", "user_id"}, // 从上下文中提取这些字段
-}, zap.String("service", "api"))
+    log.Init(log.Options{
+        // ... 其他配置
+        CtxFields: []string{"request_id", "user_id"}, // 从上下文中提取这些字段
+        Fields: []zap.Field{
+            zap.String("service", "api"),
+        },
+    })
 
 // 记录日志，会自动包含上下文中的字段
 log.Info(ctx, "API request received")
@@ -188,10 +195,9 @@ func main() {
 
 ### 核心函数
 
-#### `InitLog(opt Options, fields ...zap.Field)`
+#### `Init(opt Options)`
 初始化日志对象
-- `opt`: 日志配置选项
-- `fields`: 全局固定字段
+- `opt`: 日志配置选项，包含全局固定字段
 
 #### 日志记录函数
 
@@ -230,25 +236,31 @@ func main() {
 ### 生产环境配置
 
 ```go
-log.InitLog(log.Options{
+log.Init(log.Options{
     Filename:     "/var/log/app/app",  // 日志文件路径
     MaxCount:     30,                  // 保存30天日志
     CallerEnable: false,               // 生产环境关闭调用栈信息
     LogLevel:     zapcore.WarnLevel,   // 只记录Warn及以上级别
     CloseConsole: true,                // 关闭控制台输出
-}, zap.String("env", "production"))
+    Fields: []zap.Field{
+        zap.String("env", "production"),
+    },
+})
 ```
 
 ### 开发环境配置
 
 ```go
-log.InitLog(log.Options{
+log.Init(log.Options{
     Filename:     "app",              // 日志文件名称
     MaxCount:     7,                   // 保存7天日志
     CallerEnable: true,                // 开启调用栈信息
     LogLevel:     zapcore.DebugLevel,  // 记录所有级别日志
     CloseConsole: false,               // 开启控制台输出
-}, zap.String("env", "development"))
+    Fields: []zap.Field{
+        zap.String("env", "development"),
+    },
+})
 ```
 
 ## 许可证

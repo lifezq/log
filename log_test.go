@@ -1,3 +1,7 @@
+// Copyright 2026 The Goutils Author. All Rights Reserved.
+//
+// -------------------------------------------------------------------
+
 package log
 
 import (
@@ -10,16 +14,19 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// TestInitLog 测试日志初始化
-func TestInitLog(t *testing.T) {
+// TestInit 测试日志初始化
+func TestInit(t *testing.T) {
 	// 测试初始化日志
-	InitLog(Options{
+	Init(Options{
 		Filename:     "test",
 		MaxCount:     1,
 		CallerEnable: true,
 		LogLevel:     zapcore.DebugLevel,
 		CloseConsole: false,
-	}, zap.String("test", "value"))
+		Fields: []zap.Field{
+			zap.String("test", "value"),
+		},
+	})
 
 	// 测试Sync函数
 	Sync()
@@ -51,7 +58,7 @@ func TestBasicLog(t *testing.T) {
 // TestContextLog 测试上下文日志功能
 func TestContextLog(t *testing.T) {
 	// 重新初始化日志，配置上下文字段
-	InitLog(Options{
+	Init(Options{
 		Filename:     "test",
 		MaxCount:     1,
 		CallerEnable: true,
